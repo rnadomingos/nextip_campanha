@@ -10,7 +10,8 @@ requires-python = ">=3.12"
 dependencies = [
     "streamlit (>=1.48.0,<2.0.0)",
     "mysqlclient (>=2.2.7,<3.0.0)",
-    "sqlalchemy (>=2.0.43,<3.0.0)"
+    "sqlalchemy (>=2.0.43,<3.0.0)",
+    "python-dotenv (>=1.1.1,<2.0.0)"
 ]
 
 
