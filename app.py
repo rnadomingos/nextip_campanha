@@ -127,7 +127,7 @@ def metricas_ligacoes_gerais(data):
 
         st.metric("Ligações Não Qualificadas", value=total_ligacoes_nao_qualificadas, delta=f'{delta_nao_qulificadas} %', border=True, width="stretch")        
 
-def metricas_confirmados_gerais(data):
+def metricas_confirmados_nacoes(data):
 
     st.subheader("Confirmados Nações", divider='red')
     col1,col2, col3 = st.columns(3)
@@ -135,17 +135,18 @@ def metricas_confirmados_gerais(data):
     with col1:
         
         confirmados_nac = data[data['Categoria'].str.contains('Toyota Nacoes', case=False, na=False)]
+        confirmados_nac['Nacoes'] = 'Toyota Nacoes'
 
         df_nacoes = (
         confirmados_nac[confirmados_nac['Classificacao'].str.startswith('CONFIRMADO', na=False)]
-        .groupby(['Categoria'])
+        .groupby(['Nacoes'])
         .size()
         )
 
         # Extrair valor numerico da série
         valor_confirmados_nacoes = df_nacoes.iloc[0]
-
-        st.metric("Total de Confirmados", value=df_nacoes, delta='100 %', border=True)
+        
+        st.metric("Total de Confirmados", value=valor_confirmados_nacoes, delta='100 %', border=True)
         
     with col2:
 
@@ -161,7 +162,7 @@ def metricas_confirmados_gerais(data):
         valor_confirmados_alpha = df_nacoes_alpha.iloc[0]
 
         delta_confirmados_alpha = round((valor_confirmados_alpha / valor_confirmados_nacoes)*100,2)
-        st.metric("Confirmados Alpha", value=df_nacoes_alpha, delta=f'{delta_confirmados_alpha} %', border=True)
+        st.metric("Confirmados Alpha", value=valor_confirmados_alpha, delta=f'{delta_confirmados_alpha} %', border=True)
 
     with col3:
 
@@ -178,12 +179,67 @@ def metricas_confirmados_gerais(data):
         valor_confirmados_omega = df_nacoes_omega.iloc[0]
 
         delta_confirmados_omega = round((valor_confirmados_omega / valor_confirmados_nacoes)*100,2)
-        st.metric("Confirmados Omega", value=df_nacoes_omega, delta=f'{delta_confirmados_omega} %', border=True)              
+        st.metric("Confirmados Omega", value=valor_confirmados_omega, delta=f'{delta_confirmados_omega} %', border=True)   
+
+def metricas_confirmados_morumbi(data):
+
+    st.subheader("Confirmados Mormbi", divider='blue')
+    col1,col2, col3 = st.columns(3)
+
+    with col1:
+        
+        confirmados_nac = data[data['Categoria'].str.contains('Toyota morumbi', case=False, na=False)]
+        confirmados_nac['Morumbi'] = 'Toyota morumbi'
+
+        df_morumbi = (
+        confirmados_nac[confirmados_nac['Classificacao'].str.startswith('CONFIRMADO', na=False)]
+        .groupby(['Morumbi'])
+        .size()
+        )
+
+        # Extrair valor numerico da série
+        valor_confirmados_morumbi = df_morumbi.iloc[0]
+
+        st.metric("Total de Confirmados", value=valor_confirmados_morumbi, delta='100 %', border=True)
+        
+    with col2:
+
+        total_morumbi_alpha = data[data['Categoria'].str.contains('Toyota Morumbi ALPHA', case=False, na=False)]
+
+        df_morumbi_alpha = (
+        total_morumbi_alpha[total_morumbi_alpha['Classificacao'].str.startswith('CONFIRMADO', na=False)]
+        .groupby(['Categoria'])
+        .size()
+        )
+    
+        # Extrair valor numérico da série
+        valor_confirmados_alpha = df_morumbi_alpha.iloc[0]
+
+        delta_confirmados_alpha = round((valor_confirmados_alpha / valor_confirmados_morumbi)*100,2)
+        st.metric("Confirmados Alpha", value=valor_confirmados_alpha, delta=f'{delta_confirmados_alpha} %', border=True)
+
+    with col3:
+
+        total_morumbi_omega = data[data['Categoria'].str.contains('Toyota Morumbi OMEGA', case=False, na=False)]
+
+        df_morumbi_omega = (
+        total_morumbi_omega[total_morumbi_omega['Classificacao'].str.startswith('CONFIRMADO', na=False)]
+        .groupby(['Categoria'])
+        .size()
+        )
+
+        # Extrair valor numerico da serie
+
+        valor_confirmados_omega = df_morumbi_omega.iloc[0]
+
+        delta_confirmados_omega = round((valor_confirmados_omega / valor_confirmados_morumbi)*100,2)
+        st.metric("Confirmados Omega", value=valor_confirmados_omega, delta=f'{delta_confirmados_omega} %', border=True)              
+
 
 def resumo_confirmados(data):
 
 
-    metricas_confirmados_gerais(data)
+    metricas_confirmados_nacoes(data)
 
     st.subheader('Confirmação por Agente', divider='red', )
     col1, col2, col3 = st.columns(3)
@@ -230,8 +286,10 @@ def resumo_confirmados(data):
         st.text('Toyota Nações Omega')
         st.dataframe(df_nacoes_omega_agente.drop(columns=['Categoria']), hide_index=True)
 
+
+    metricas_confirmados_morumbi(data)
     
-    st.subheader('Confirmados Morumbi', divider='blue', )
+    st.subheader('Confirmação por Agente', divider='blue', )
     col4, col5, col6 = st.columns(3)
 
     with col4:
